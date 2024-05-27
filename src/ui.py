@@ -1,5 +1,6 @@
 from tkinter import Tk, BOTH, Canvas
 
+
 class Window:
     def __init__(self, width, height):
         self.width = width
@@ -31,30 +32,41 @@ class Window:
     def draw_line(self, line, fill_color):
         line.draw(self.canvas, fill_color)
 
+
 class Point:
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
+
 class Line:
     def __init__(self, start, end):
         self.start = start
         self.end = end
+
     def draw(self, canvas, fill_color):
-        canvas.create_line(self.start.x, self.start.y, self.end.x, self.end.y, fill=fill_color, width=2)
+        canvas.create_line(
+            self.start.x, self.start.y, self.end.x, self.end.y, fill=fill_color, width=2
+        )
+
 
 class Cell:
-    def __init__(self, win, top_left, bottom_right):
+    def __init__(self, win):
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
         self.has_bottom_wall = True
-        self._x1 = top_left.x
-        self._y1 = top_left.y
-        self._x2 = bottom_right.x
-        self._y2 = bottom_right.y
+        self._x1 = None
+        self._y1 = None
+        self._x2 = None
+        self._y2 = None
         self._win = win
-    def draw(self):
+
+    def draw(self, x1, y1, x2, y2):
+        self._x1 = x1
+        self._y1 = y1
+        self._x2 = x2
+        self._y2 = y2
         if self.has_left_wall:
             start = Point(self._x1, self._y1)
             end = Point(self._x1, self._y2)
@@ -72,4 +84,10 @@ class Cell:
             end = Point(self._x2, self._y2)
             self._win.draw_line(Line(start, end), "black")
 
-
+    def draw_move(self, to_cell, undo=False):
+        start = Point((self._x2 + self._x1) // 2, (self._y2 + self._y1) // 2)
+        end = Point((to_cell._x2 + to_cell._x1) // 2, (to_cell._y2 + to_cell._y1) // 2)
+        color = "red"
+        if undo:
+            color = "gray"
+        self._win.draw_line(Line(start, end), color)
