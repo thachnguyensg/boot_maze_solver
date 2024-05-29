@@ -100,6 +100,8 @@ class Cell:
         self._win.draw_line(Line(bottom_wall_start, bottom_wall_end), bottom_wall_color)
 
     def draw_move(self, to_cell, undo=False):
+        if self._win is None:
+            return
         start = Point((self._x2 + self._x1) // 2, (self._y2 + self._y1) // 2)
         end = Point((to_cell._x2 + to_cell._x1) // 2, (to_cell._y2 + to_cell._y1) // 2)
         color = "red"
